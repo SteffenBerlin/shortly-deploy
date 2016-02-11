@@ -62,7 +62,8 @@ module.exports = function(grunt) {
         ],
         tasks: [
           'concat',
-          'uglify'
+          'uglify',
+          'eslint'
         ]
       },
       css: {
@@ -100,12 +101,12 @@ module.exports = function(grunt) {
   });
 
 
-  grunt.registerTask('upload', function(n) {
-    if (grunt.option('prod')) {
-      // add your production server task here
-    }
-    grunt.task.run([ 'server-dev' ]);
-  });
+  // grunt.registerTask('upload', function(n) {
+  //   if (grunt.option('prod')) {
+  //     // add your production server task here
+  //   }
+  //   grunt.task.run([ 'server-dev' ]);
+  // });
 
   ////////////////////////////////////////////////////
   // Main grunt tasks
@@ -123,18 +124,33 @@ module.exports = function(grunt) {
 
   grunt.registerTask('upload', function(n) {
     if (grunt.option('prod')) {
+      console.log('proddddd');
+      // git push live master
       // add your production server task here
     } else {
       grunt.task.run([ 'server-dev' ]);
     }
   });
 
-  grunt.registerTask('deploy', [
-    // add your deploy tasks here
-    'eslint',
-    'test',
-    'upload'
-  ]);
+  grunt.registerTask('deploy', function(n) {
+    grunt.task.run(['eslint', 'test']);
+
+    if (grunt.option('prod')) {
+      console.log('the prod option for deploy works', grunt.option('prod'));
+      // grunt.option.init('prod');
+      grunt.task.run('upload'); // does this syntax work?
+    } else {
+      grunt.task.run(['upload']);
+    }
+  }
+
+   // [
+   //  // add your deploy tasks here
+   //  'eslint',
+   //  'test',
+   //  // if grunt option prod (deploy -- prod) then (upload --prod)
+   //  'upload']
+  );
 
 
 };

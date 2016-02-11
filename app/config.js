@@ -5,6 +5,7 @@ var knex = require('knex')({
     filename: path.join(__dirname, '../db/shortly.sqlite')
   }
 });
+var mongoose = require('mongoose');
 var db = require('bookshelf')(knex);
 
 db.knex.schema.hasTable('urls').then(function(exists) {
