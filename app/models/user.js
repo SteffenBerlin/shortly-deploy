@@ -12,6 +12,20 @@ var userSchema = new mongoose.Schema({
   links: [{type: mongoose.Schema.Types.ObjectId, ref: 'Link'}]
 });
 
+userSchema.pre('save', function() {
+  var cipher = Promise.promisify(bcrypt.hash);
+  return cipher(this.password, null, null).bind(this)
+    .then(function(hash) {
+      this.password = hash;
+    });
+});
+
+userSchema.methods.comparePassword = function(attemptedPassword, callback) {
+  bcrypt.compare(attemptedPassword, this.password, function(err, isMatch) {
+    callback(isMatch);
+  });
+};
+
 var User = mongoose.model('User', userSchema);
 
 // var User = db.Model.extend({

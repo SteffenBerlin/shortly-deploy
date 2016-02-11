@@ -10,6 +10,12 @@ var linkSchema = new mongoose.Schema({
   visits: Number
 });
 
+linkSchema.pre('save', function(){
+  var shasum = crypto.createHash('sha1');
+  shasum.update(this.url);
+  this.code = shasum.digest('hex').slice(0, 5);
+});
+
 var Link = mongoose.model('Link', linkSchema);
 
 // var Link = db.Model.extend({
