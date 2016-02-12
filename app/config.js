@@ -1,3 +1,5 @@
+// No longer used with mongoDB
+
 var path = require('path');
 var knex = require('knex')({
   client: 'sqlite3',
