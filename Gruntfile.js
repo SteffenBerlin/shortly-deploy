@@ -63,7 +63,6 @@ module.exports = function(grunt) {
         tasks: [
           'concat',
           'uglify',
-          'eslint'
         ]
       },
       css: {
@@ -74,6 +73,7 @@ module.exports = function(grunt) {
 
     shell: {
       prodServer: {
+        command: 'git push live master'
       }
     },
   });
@@ -117,14 +117,14 @@ module.exports = function(grunt) {
   ]);
 
   grunt.registerTask('build', [
-    'concat',
-    'uglify',
-    'cssmin'
+    'eslint',
+    'test'
   ]);
 
   grunt.registerTask('upload', function(n) {
     if (grunt.option('prod')) {
       console.log('proddddd');
+      grunt.task.run('shell:prodServer');
       // git push live master
       // add your production server task here
     } else {
@@ -133,12 +133,12 @@ module.exports = function(grunt) {
   });
 
   grunt.registerTask('deploy', function(n) {
-    grunt.task.run(['eslint', 'test']);
+    grunt.task.run('build');
 
     if (grunt.option('prod')) {
       console.log('the prod option for deploy works', grunt.option('prod'));
       // grunt.option.init('prod');
-      grunt.task.run('upload'); // does this syntax work?
+      grunt.task.run(['upload']); // does this syntax work?
     } else {
       grunt.task.run(['upload']);
     }
